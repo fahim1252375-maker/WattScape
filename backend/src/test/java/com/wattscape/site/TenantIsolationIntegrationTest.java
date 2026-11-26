@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers(disabledWithoutDocker = true)
-@SpringBootTest
+@SpringBootTest(properties = "management.health.mail.enabled=false")
 @AutoConfigureMockMvc
 @Import(TenantIsolationIntegrationTest.TestJwtConfiguration.class)
 class TenantIsolationIntegrationTest {

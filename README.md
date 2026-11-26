@@ -201,3 +201,16 @@ See [WATTSCAPE_AUTHENTICATION_SETUP.md](WATTSCAPE_AUTHENTICATION_SETUP.md).
 A source-level remediation package now addresses the identified analytics 10,000-row truncation, work-order due-date clearing and Auditor assignment, invitation after-commit delivery, invitation template substitution, AI data minimization/disclosure, Keycloak grant separation, production realm placeholders/brute-force defaults, and explicit API authentication/authorization error responses. An additive V6 index supports the latest site-wide telemetry query. Membership deactivation and automated telemetry purging remain blocked pending owner policy.
 
 Read the [complete remediation audit](WATTSCAPE_COMPLETE_AUDIT.md), [fixes summary](WATTSCAPE_FIXES_SUMMARY.md), [authentication guide](WATTSCAPE_AUTHENTICATION_GUIDE.md), and [remaining owner decisions](WATTSCAPE_REMAINING_ISSUES.md). These are new source-based documents because the exact four prior deliverables named in the remediation brief were not present in this source snapshot. The final remediation tests still require execution on the owner Mac and isolated backend/Keycloak/PostgreSQL environment; production remains NO-GO.
+
+
+## Repository engineering references
+
+- [Architecture and trust boundaries](docs/ARCHITECTURE.md)
+- [Environment variable reference](docs/ENVIRONMENT-VARIABLES.md)
+- [Production deployment blueprint](docs/PRODUCTION-DEPLOYMENT-BLUEPRINT.md)
+- [Operations and backup runbook](docs/OPERATIONS-RUNBOOK.md)
+- [Latest source and production audit](docs/PRODUCTION-AUDIT-2026-11-26.md)
+- [Security reporting policy](SECURITY.md)
+- [Contribution guide](CONTRIBUTING.md)
+
+**Release status (2026-11-26):** GitHub CI is green for the current mainline source. The hosted API, managed PostgreSQL, production Keycloak, SMTP delivery, and full live-mode workflows are not yet deployed or accepted. Do not treat a Demo-mode preview as production acceptance.

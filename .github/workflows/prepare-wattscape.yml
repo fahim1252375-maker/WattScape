@@ -1,0 +1,254 @@
+name: Organize WattScape source
+
+on:
+  push:
+    paths:
+      - 'WattScape-Phase4-Latest-Full-Source-2026-11-26-123914.zip'
+      - '.github/workflows/prepare-wattscape.yml'
+      - '.repo-bootstrap-trigger'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wattscape-source-organization
+  cancel-in-progress: false
+
+jobs:
+  extract-and-organize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract and organize project files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ARCHIVE="WattScape-Phase4-Latest-Full-Source-2026-11-26-123914.zip"
+          if [ ! -f "$ARCHIVE" ]; then
+            echo "The source archive is not present; nothing to extract."
+            exit 0
+          fi
+
+          TMP_DIR="$(mktemp -d)"
+          trap 'rm -rf "$TMP_DIR"' EXIT
+
+          python3 - "$ARCHIVE" "$TMP_DIR/extracted" <<'PY'
+          import os
+          import shutil
+          import stat
+          import sys
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          archive = Path(sys.argv[1])
+          extracted = Path(sys.argv[2]).resolve()
+          extracted.mkdir(parents=True, exist_ok=True)
+
+          blocked_dirs = {".git", "node_modules", "__MACOSX"}
+          blocked_names = {".DS_Store", "id_rsa", "id_ed25519"}
+          blocked_suffixes = {".pem", ".key", ".p12", ".pfx", ".keystore"}
+
+          with zipfile.ZipFile(archive) as zf:
+              damaged = zf.testzip()
+              if damaged:
+                  raise SystemExit(f"ZIP integrity check failed at: {damaged}")
+
+              for info in zf.infolist():
+                  normalized = info.filename.replace("\\", "/")
+                  member = PurePosixPath(normalized)
+
+                  if member.is_absolute() or any(part in ("..", "") for part in member.parts):
+                      raise SystemExit(f"Unsafe archive path rejected: {info.filename}")
+                  if not member.parts:
+                      continue
+                  if any(part in blocked_dirs for part in member.parts):
+                      continue
+
+                  name = member.name
+                  lower = name.lower()
+                  if name in blocked_names or name.endswith(blocked_suffixes):
+                      continue
+                  if lower == ".env" or (lower.startswith(".env.") and lower != ".env.example"):
+                      continue
+                  if lower.startswith("firebase-adminsdk") and lower.endswith(".json"):
+                      continue
+                  if "service-account" in lower and lower.endswith(".json"):
+                      continue
+
+                  target = (extracted / Path(*member.parts)).resolve()
+                  if not target.is_relative_to(extracted):
+                      raise SystemExit(f"Unsafe archive path rejected: {info.filename}")
+
+                  unix_mode = (info.external_attr >> 16) & 0xFFFF
+                  if stat.S_ISLNK(unix_mode):
+                      continue
+
+                  if info.is_dir():
+                      target.mkdir(parents=True, exist_ok=True)
+                      continue
+
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  with zf.open(info) as source, target.open("wb") as destination:
+                      shutil.copyfileobj(source, destination)
+
+                  if unix_mode & 0o111:
+                      target.chmod(0o755)
+
+          entries = [p for p in extracted.iterdir() if p.name not in {"__MACOSX", ".DS_Store"}]
+          source_root = entries[0] if len(entries) == 1 and entries[0].is_dir() else extracted
+
+          repo_root = Path.cwd()
+          copied = 0
+          for item in source_root.iterdir():
+              destination = repo_root / item.name
+              if item.is_dir():
+                  shutil.copytree(item, destination, dirs_exist_ok=True)
+              else:
+                  shutil.copy2(item, destination)
+              copied += 1
+
+          if copied == 0:
+              raise SystemExit("The archive did not contain any usable project files.")
+
+          # Add a practical cross-platform baseline only when the project has no .gitignore.
+          gitignore = repo_root / ".gitignore"
+          if not gitignore.exists():
+              gitignore.write_text("""# Dependencies
+          node_modules/
+          vendor/
+          .pnp.*
+          
+          # Build output and caches
+          dist/
+          build/
+          out/
+          .next/
+          .nuxt/
+          .turbo/
+          .cache/
+          coverage/
+          
+          # Environment and secrets
+          .env
+          .env.*
+          !.env.example
+          *.pem
+          *.key
+          *.p12
+          *.pfx
+          
+          # Logs and operating-system files
+          *.log
+          npm-debug.log*
+          yarn-debug.log*
+          pnpm-debug.log*
+          .DS_Store
+          Thumbs.db
+          
+          # Python
+          __pycache__/
+          *.py[cod]
+          .venv/
+          venv/
+          .pytest_cache/
+          .mypy_cache/
+          
+          # Local IDE settings
+          .idea/
+          .vscode/
+          """, encoding="utf-8")
+
+          # Create a root README only when the source archive did not provide one.
+          has_readme = any(
+              p.is_file() and p.name.lower().startswith("readme")
+              for p in repo_root.iterdir()
+          )
+          if not has_readme:
+              manifests = sorted(
+                  p for p in repo_root.glob("**/package.json")
+                  if "node_modules" not in p.parts and ".git" not in p.parts
+                  and len(p.relative_to(repo_root).parts) <= 4
+              )
+              package = {}
+              manifest_path = None
+              if manifests:
+                  import json
+                  manifest_path = manifests[0]
+                  try:
+                      package = json.loads(manifest_path.read_text(encoding="utf-8"))
+                  except Exception:
+                      package = {}
+
+              description = package.get("description") or "Source code for the WattScape project."
+              lines = [
+                  "# WattScape",
+                  "",
+                  description,
+                  "",
+                  "This repository contains the WattScape Phase 4 project source.",
+                  "",
+                  "## Getting started",
+                  "",
+                  "1. Review the project structure and the configuration files.",
+              ]
+
+              if manifest_path:
+                  rel_manifest = manifest_path.relative_to(repo_root).as_posix()
+                  lines += [
+                      f"2. Install the dependencies for the package at `{rel_manifest}` using the package manager indicated by its lockfile.",
+                      "3. Review the available scripts in that package's `package.json` before running the application.",
+                  ]
+                  scripts = package.get("scripts") or {}
+                  if scripts:
+                      lines += ["", "## Available scripts", "", "| Script | Command |", "|---|---|"]
+                      for script_name, command in scripts.items():
+                          safe_command = str(command).replace("|", "\\|")
+                          lines.append(f"| `{script_name}` | `{safe_command}` |")
+              else:
+                  lines += [
+                      "2. Follow the setup instructions in the project-specific documentation and configuration files.",
+                  ]
+
+              lines += [
+                  "",
+                  "## Configuration and security",
+                  "",
+                  "- Keep API keys, tokens, credentials, and local environment files out of version control.",
+                  "- Use the supplied `.env.example` file, when present, as a reference for local configuration.",
+                  "- Do not commit generated dependencies, build output, or personal machine settings.",
+                  "",
+                  "## Project status",
+                  "",
+                  "Source organization: Phase 4 full-source archive dated November 26, 2026.",
+                  "",
+              ]
+              (repo_root / "README.md").write_text("\n".join(lines), encoding="utf-8")
+
+          print(f"Copied {copied} top-level source entries from the archive.")
+          print("Top-level repository contents:")
+          for item in sorted(repo_root.iterdir(), key=lambda p: p.name.lower()):
+              if item.name not in {".git"}:
+                  print(("DIR " if item.is_dir() else "FILE") + " " + item.name)
+          PY
+
+          rm -f "$ARCHIVE"
+          rm -f ".repo-bootstrap-trigger"
+          rm -f ".github/workflows/prepare-wattscape.yml"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No repository changes were produced."
+            exit 0
+          fi
+
+          git commit -m "Organize WattScape Phase 4 source code"
+          git push

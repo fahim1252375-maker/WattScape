@@ -72,7 +72,7 @@ jobs:
 
                   name = member.name
                   lower = name.lower()
-                  if name in blocked_names or name.endswith(blocked_suffixes):
+                  if name in blocked_names or lower.endswith(tuple(blocked_suffixes)):
                       continue
                   if lower == ".env" or (lower.startswith(".env.") and lower != ".env.example"):
                       continue

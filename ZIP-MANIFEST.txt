@@ -1,6 +1,6 @@
 WattScape Phase 4 — Latest Full Source Archive
 Created: 2026-11-26T12:39:16+06:00
-Source folder: /Users/md.minhazurrahmanfahim/Documents/Codex/2026-11-26/files-mentioned-by-the-user-wattscape/work/source/WattScape-Phase4-Demo-Source
+Source folder: WattScape-Phase4-Demo-Source (local workspace path redacted)
 Files included: 256
 Uncompressed file bytes: 2102880
 

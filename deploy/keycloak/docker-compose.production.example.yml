@@ -1,0 +1,36 @@
+# EXAMPLE ONLY. Configuration readiness template; nothing here is deployed by this repository.
+# Replace every REPLACE_* / example.com value in the host's secret/environment panel.
+# Do not commit a filled-in copy of this file or any .env containing real values.
+#
+# Topology: TLS terminates at the managed reverse proxy / edge (HTTPS to clients); the proxy
+# forwards plain HTTP to Keycloak on a private network and overwrites X-Forwarded-* headers.
+# Keycloak is not published on a public port.
+services:
+  keycloak:
+    build: .
+    restart: unless-stopped
+    command: ["start", "--optimized"]
+    environment:
+      # Public HTTPS issuer origin. Must exactly match the `iss` claim the API validates.
+      KC_HOSTNAME: ${KC_HOSTNAME:-https://identity.example.com}
+      # Edge termination: the proxy speaks HTTP to Keycloak. Only valid behind a trusted proxy.
+      KC_HTTP_ENABLED: "true"
+      # Honor X-Forwarded-* from the trusted proxy only (proxy must overwrite these headers).
+      KC_PROXY_HEADERS: xforwarded
+      # Managed PostgreSQL, TLS enforced (sslmode=require). Use a dedicated least-privilege role.
+      KC_DB: postgres
+      KC_DB_URL: ${KC_DB_URL:-jdbc:postgresql://REPLACE_DB_HOST:5432/keycloak?sslmode=require}
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-REPLACE_DB_USER}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:?Set KC_DB_PASSWORD from the secret store}
+      # Health for load balancers (management port 9000 must stay on the private network).
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      # First boot only. Create a named administrator with MFA, then REMOVE these two variables
+      # and redeploy so the bootstrap credential stops existing in the environment.
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-}
+    expose:
+      - "8080"   # HTTP for the reverse proxy only
+      - "9000"   # health/metrics for the private monitoring network only
+    security_opt:
+      - no-new-privileges:true

@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: wattscape-api
+    scheme: https
+    metrics_path: /actuator/prometheus
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ["api.internal.example.com:443"]
+        labels:
+          service: wattscape-api
+          environment: replace-me
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/secrets/wattscape-admin-token
+    tls_config:
+      ca_file: /etc/prometheus/certs/internal-ca.pem
+      min_version: TLS12

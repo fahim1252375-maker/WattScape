@@ -1,0 +1,108 @@
+{
+  "realm": "${WATSCAPE_PRODUCTION_REALM}",
+  "enabled": true,
+  "displayName": "WattScape",
+  "displayNameHtml": "<strong>WattScape</strong>",
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "loginWithEmailAllowed": true,
+  "editUsernameAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "verifyEmail": true,
+  "duplicateEmailsAllowed": false,
+  "accessTokenLifespan": 300,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "bruteForceStrategy": "MULTIPLE",
+  "failureFactor": 5,
+  "waitIncrementSeconds": 60,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "passwordPolicy": "length(12) and digits(1) and upperCase(1) and lowerCase(1) and specialChars(1)",
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "WattScape organization administrator"
+      },
+      {
+        "name": "MEMBER",
+        "description": "WattScape organization member; API permissions are also checked against database membership"
+      }
+    ]
+  },
+  "defaultRoles": [
+    "MEMBER"
+  ],
+  "clients": [
+    {
+      "clientId": "wattscape-web",
+      "name": "WattScape Web",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "${WATSCAPE_FRONTEND_ORIGIN}/auth/callback",
+        "${WATSCAPE_FRONTEND_ORIGIN}/auth/silent-callback"
+      ],
+      "webOrigins": [
+        "${WATSCAPE_FRONTEND_ORIGIN}"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "${WATSCAPE_FRONTEND_ORIGIN}/",
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "WattScape API audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "${WATSCAPE_API_AUDIENCE}",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "lightweight.claim": "false"
+          }
+        },
+        {
+          "name": "Organization ID claim",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "organization_id",
+            "claim.name": "organization_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "loginTheme": "wattscape-brand",
+  "smtpServer": {
+    "host": "${WATSCAPE_SMTP_HOST}",
+    "port": "${WATSCAPE_SMTP_PORT}",
+    "from": "${WATSCAPE_SMTP_FROM}",
+    "fromDisplayName": "WattScape",
+    "ssl": "false",
+    "starttls": "true",
+    "auth": "true",
+    "user": "${WATSCAPE_SMTP_USERNAME}",
+    "password": "${WATSCAPE_SMTP_PASSWORD}"
+  },
+  "identityProviders": [],
+  "identityProviderMappers": []
+}

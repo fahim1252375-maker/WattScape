@@ -1,0 +1,16 @@
+WATTSCAPE
+Intelligent Resource Operations
+
+You’re invited to WattScape
+
+You have been invited to join ${organization} as ${role}.
+
+Open WattScape: ${appUrl}
+
+Sign in with the email address that received this message. In Account & access, choose Join organization and enter this invitation code:
+
+${token}
+
+This code can be used once, only by the verified email address it was sent to. It expires ${expiresAt}.
+
+The Open WattScape link does not contain the invitation code. If you weren’t expecting this invitation, you can ignore this email.

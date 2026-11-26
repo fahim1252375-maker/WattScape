@@ -1,0 +1,9 @@
+package com.wattscape.audit;
+import com.wattscape.common.BaseEntity; import jakarta.persistence.*; import java.util.UUID; import java.util.Map; import org.hibernate.annotations.JdbcTypeCode; import org.hibernate.type.SqlTypes;
+@Entity @Table(name="audit_events",indexes=@Index(name="ix_audit_org_created",columnList="organization_id,created_at"))
+public class AuditEvent extends BaseEntity {
+ @Column(name="organization_id",nullable=false,updatable=false) private UUID organizationId; @Column(name="actor_subject",nullable=false,updatable=false,length=255) private String actorSubject; @Column(nullable=false,updatable=false,length=100) private String action; @Column(nullable=false,updatable=false,length=160) private String resourceType; @Column(name="resource_id",updatable=false) private UUID resourceId; @Column(nullable=false,updatable=false,length=16) private String outcome; @Column(name="request_id",updatable=false,length=80) private String requestId; @JdbcTypeCode(SqlTypes.JSON) @Column(name="details_json",updatable=false,columnDefinition="jsonb",nullable=false) private Map<String,Object> detailsJson=Map.of();
+ protected AuditEvent(){} public AuditEvent(UUID org,String actor,String action,String resourceType,UUID resourceId,String outcome,String requestId,Map<String,Object> detailsJson){organizationId=org;actorSubject=actor;this.action=action;this.resourceType=resourceType;this.resourceId=resourceId;this.outcome=outcome;this.requestId=requestId;this.detailsJson=detailsJson;}
+ public UUID getOrganizationId(){return organizationId;} public String getActorSubject(){return actorSubject;} public String getAction(){return action;} public String getResourceType(){return resourceType;} public UUID getResourceId(){return resourceId;} public String getOutcome(){return outcome;} public String getRequestId(){return requestId;}
+ @PreUpdate private void immutable(){throw new IllegalStateException("Audit events are immutable");}
+}

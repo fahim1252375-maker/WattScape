@@ -1,0 +1,195 @@
+{
+  "realm": "wattscape-local",
+  "enabled": true,
+  "displayName": "WattScape",
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "accessTokenLifespan": 300,
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "Local development administrator"
+      },
+      {
+        "name": "MEMBER",
+        "description": "Local development read-only member"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "wattscape-local",
+      "name": "WattScape Web",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/auth/callback",
+        "http://localhost:3000/auth/silent-callback"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:3000/",
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "WattScape API audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "wattscape-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "lightweight.claim": "false"
+          }
+        },
+        {
+          "name": "Organization ID claim",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "organization_id",
+            "claim.name": "organization_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "wattscape-local-smoke",
+      "name": "WattScape Local Smoke Test Only",
+      "description": "LOCAL ONLY. Used by repository smoke scripts; never configure this client in production.",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [],
+      "webOrigins": [],
+      "fullScopeAllowed": true
+    }
+  ],
+  "users": [
+    {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "username": "${WATSCAPE_ADMIN_USERNAME}",
+      "enabled": true,
+      "firstName": "Local",
+      "lastName": "Administrator",
+      "email": "local-admin@wattscape.test",
+      "emailVerified": true,
+      "attributes": {
+        "organization_id": [
+          "20000000-0000-4000-8000-000000000001"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${WATSCAPE_ADMIN_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000002",
+      "username": "${WATSCAPE_MEMBER_USERNAME}",
+      "enabled": true,
+      "firstName": "Local",
+      "lastName": "Member",
+      "email": "local-member@wattscape.test",
+      "emailVerified": true,
+      "attributes": {
+        "organization_id": [
+          "20000000-0000-4000-8000-000000000001"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${WATSCAPE_MEMBER_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "MEMBER"
+      ]
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000003",
+      "username": "local-other-admin",
+      "enabled": true,
+      "firstName": "Other",
+      "lastName": "Administrator",
+      "email": "other-admin@wattscape.test",
+      "emailVerified": true,
+      "attributes": {
+        "organization_id": [
+          "20000000-0000-4000-8000-000000000002"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${WATSCAPE_ADMIN_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    }
+  ],
+  "verifyEmail": true,
+  "duplicateEmailsAllowed": false,
+  "passwordPolicy": "length(12) and digits(1) and upperCase(1) and lowerCase(1) and specialChars(1)",
+  "defaultRoles": [
+    "MEMBER"
+  ],
+  "smtpServer": {
+    "host": "${KC_EMAIL_HOST}",
+    "port": "1025",
+    "from": "no-reply@wattscape.local",
+    "fromDisplayName": "WattScape Local",
+    "ssl": "false",
+    "starttls": "false",
+    "auth": "false"
+  },
+  "requiredActions": [
+    {
+      "alias": "TERMS_AND_CONDITIONS",
+      "name": "Terms and Conditions",
+      "providerId": "terms_and_conditions",
+      "enabled": true,
+      "defaultAction": true,
+      "priority": 10,
+      "config": {}
+    }
+  ],
+  "loginTheme": "wattscape-brand",
+  "displayNameHtml": "<strong>WattScape</strong>",
+  "loginWithEmailAllowed": true,
+  "registrationEmailAsUsername": true,
+  "editUsernameAllowed": false
+}

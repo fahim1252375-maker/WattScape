@@ -1,0 +1,18 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+!backend/.env.production.example
+backend/target/
+
+backups/
+__pycache__/
+*.py[cod]
+
+# Playwright artifacts (generated)
+e2e-results/
+e2e-report/

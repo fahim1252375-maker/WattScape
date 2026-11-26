@@ -1,0 +1,206 @@
+/* WattScape-branded Keycloak login and registration theme.
+   Keep this CSS local and self-hosted; no external fonts or trackers are loaded. */
+:root {
+  --ws-auth-ink: #102236;
+  --ws-auth-muted: #62758a;
+  --ws-auth-line: #dce5ec;
+  --ws-auth-teal: #0d9488;
+  --ws-auth-teal-dark: #0f766e;
+  --ws-auth-focus: rgba(13, 148, 136, .22);
+}
+
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  color: var(--ws-auth-ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(ellipse at 16% 12%, rgba(13, 148, 136, .22), transparent 34%),
+    radial-gradient(ellipse at 86% 82%, rgba(56, 189, 248, .14), transparent 32%),
+    linear-gradient(145deg, #071321 0%, #0b1e30 52%, #10283b 100%);
+  background-attachment: fixed;
+}
+
+.pf-v5-c-login, .pf-v6-c-login, .login-pf {
+  min-height: 100vh !important;
+  background: transparent !important;
+  position: relative;
+  isolation: isolate;
+}
+.pf-v5-c-login__container, .pf-v6-c-login__container {
+  width: min(100% - 32px, 460px) !important;
+  max-width: 460px !important;
+  margin-inline: auto !important;
+}
+.pf-v5-c-login__main, .pf-v6-c-login__main, #kc-content-wrapper {
+  overflow: hidden;
+  border: 1px solid rgba(220, 229, 236, .92) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, .97) !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .28), 0 4px 16px rgba(0, 0, 0, .08) !important;
+}
+.pf-v5-c-login__main-header, .pf-v6-c-login__main-header {
+  padding: 34px 36px 12px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.pf-v5-c-login__main-body, .pf-v6-c-login__main-body {
+  padding: 18px 36px 30px !important;
+}
+.pf-v5-c-login__main-footer, .pf-v6-c-login__main-footer {
+  padding: 18px 28px 24px !important;
+  border-top: 1px solid #edf1f5 !important;
+  background: #f8fafc !important;
+}
+
+#kc-header { margin: 0 auto 22px !important; padding: 0 !important; text-align: center; }
+#kc-header-wrapper {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 1;
+  text-shadow: none !important;
+}
+#kc-header-wrapper::before {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  background: url("../img/wattscape-mark.png") center / contain no-repeat;
+}
+#kc-header-wrapper::after {
+  content: "WattScape";
+  color: #f5fbff;
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: -.045em;
+}
+
+#kc-page-title, .pf-v5-c-login__main-header h1, .pf-v6-c-login__main-header h1 {
+  color: var(--ws-auth-ink) !important;
+  font-size: clamp(23px, 4vw, 29px) !important;
+  font-weight: 720 !important;
+  letter-spacing: -.045em !important;
+  line-height: 1.2 !important;
+}
+#kc-form, #kc-form-wrapper, #kc-register-form { width: 100%; }
+#kc-form input, #kc-register-form input,
+.pf-v5-c-form-control, .pf-v6-c-form-control,
+input[type="text"], input[type="email"], input[type="password"] {
+  min-height: 48px;
+  box-sizing: border-box;
+  border: 1px solid #cbd7e1 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: var(--ws-auth-ink) !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+}
+#kc-form input:focus, #kc-register-form input:focus,
+.pf-v5-c-form-control:focus, .pf-v6-c-form-control:focus,
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+  border-color: var(--ws-auth-teal) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 3px var(--ws-auth-focus) !important;
+}
+label, .pf-v5-c-form__label-text, .pf-v6-c-form__label-text {
+  color: #31465a !important;
+  font-size: 13px !important;
+  font-weight: 620 !important;
+}
+
+#kc-login, #kc-register, #kc-form-buttons .pf-v5-c-button, #kc-form-buttons .pf-v6-c-button,
+.pf-v5-c-button.pf-m-primary, .pf-v6-c-button.pf-m-primary {
+  min-height: 48px;
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #0f9186, #0f766e) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 680 !important;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, .18) !important;
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+#kc-login:hover, #kc-register:hover, #kc-form-buttons .pf-v5-c-button:hover,
+#kc-form-buttons .pf-v6-c-button:hover, .pf-v5-c-button.pf-m-primary:hover,
+.pf-v6-c-button.pf-m-primary:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 118, 110, .24) !important;
+}
+a, .pf-v5-c-login__main a, .pf-v6-c-login__main a {
+  color: var(--ws-auth-teal-dark) !important;
+  font-weight: 600;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover { color: #115e59 !important; }
+#kc-registration-container, #kc-info-wrapper {
+  color: var(--ws-auth-muted) !important;
+  font-size: 13px;
+}
+.pf-v5-c-alert, .pf-v6-c-alert { border-radius: 12px !important; }
+#kc-locale, #kc-locale-wrapper { color: #d9e7f0 !important; }
+
+@media (max-width: 520px) {
+  #kc-header { margin-bottom: 18px !important; }
+  .pf-v5-c-login__main-header, .pf-v6-c-login__main-header { padding: 26px 22px 8px !important; }
+  .pf-v5-c-login__main-body, .pf-v6-c-login__main-body { padding: 16px 22px 24px !important; }
+  .pf-v5-c-login__main-footer, .pf-v6-c-login__main-footer { padding: 16px 20px 20px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+/* Keycloak v26 / PatternFly 5 form and social-provider refinements. */
+.pf-v5-c-login__container { width: min(100% - 32px, 520px) !important; max-width: 520px !important; }
+#kc-form-login, #kc-register-form, #kc-reset-password-form { width: 100%; }
+#kc-form-login .pf-v5-c-form__group,
+#kc-register-form .pf-v5-c-form__group,
+#kc-reset-password-form .pf-v5-c-form__group { margin-block: 0 16px; }
+#kc-form-login .pf-v5-c-form-control,
+#kc-register-form .pf-v5-c-form-control,
+#kc-reset-password-form .pf-v5-c-form-control { width: 100%; }
+#kc-form-options, #kc-form-options .checkbox { color: var(--ws-auth-muted) !important; font-size: 13px !important; }
+#kc-form-options input[type="checkbox"], #kc-terms-checkbox { accent-color: var(--ws-auth-teal); }
+#kc-social-providers { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--ws-auth-line); }
+#kc-social-providers h2 { color: var(--ws-auth-muted) !important; font-size: 12px !important; font-weight: 650 !important; text-align: center; }
+#kc-social-providers ul, #kc-social-providers .pf-v5-c-login__main-footer-band { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 12px 0 0 !important; }
+#kc-social-providers li, #kc-social-providers .pf-v5-c-login__main-footer-band-item { width: auto !important; margin: 0 !important; }
+#kc-social-providers a, #kc-social-providers button,
+#kc-social-providers .pf-v5-c-button {
+  display: inline-flex !important; min-height: 46px; width: 100%; align-items: center; justify-content: center;
+  border: 1px solid var(--ws-auth-line) !important; border-radius: 12px !important;
+  background: #fff !important; color: var(--ws-auth-ink) !important; font-size: 13px !important; font-weight: 650 !important;
+  box-shadow: none !important;
+}
+#kc-social-providers a:hover, #kc-social-providers button:hover { border-color: var(--ws-auth-teal) !important; background: #f5fbfa !important; }
+#kc-error-message, .pf-v5-c-alert, .pf-v5-c-form__helper-text { border-radius: 12px !important; }
+#kc-info-wrapper { line-height: 1.55; }
+
+/* Accessible show/hide control added by password-enhancements.js. */
+.ws-password-control { position: relative !important; display: flex !important; align-items: center; }
+.ws-password-control input { width: 100% !important; padding-right: 68px !important; }
+.ws-password-toggle {
+  position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+  min-width: 48px; min-height: 34px; padding: 5px 8px; border: 0; border-radius: 8px;
+  background: #edf7f6; color: var(--ws-auth-teal-dark); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.ws-password-toggle:hover { background: #dff1ef; }
+.ws-password-toggle:focus-visible { outline: 3px solid var(--ws-auth-focus); outline-offset: 2px; }
+.ws-password-strength { display: grid; gap: 7px; margin-top: 9px; }
+.ws-password-strength__bars { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.ws-password-strength__bar { height: 4px; border-radius: 99px; background: #e5edf2; transition: background .15s ease; }
+.ws-password-strength__bar.is-active { background: #d69b38; }
+.ws-password-strength__bar.is-active.is-strong { background: #0d9488; }
+.ws-password-strength__label { color: var(--ws-auth-muted); font-size: 11px; line-height: 1.4; }
+
+@media (max-width: 520px) {
+  .pf-v5-c-login__container { width: min(100% - 24px, 520px) !important; }
+  #kc-social-providers ul, #kc-social-providers .pf-v5-c-login__main-footer-band { grid-template-columns: 1fr; }
+}

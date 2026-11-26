@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "WattScape — Intelligent Resource Twin",
+  "short_name": "WattScape",
+  "description": "An operational twin for building spaces, equipment, resource telemetry and sustainability workflows.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07121F",
+  "theme_color": "#07121F",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

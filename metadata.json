@@ -1,0 +1,6 @@
+{
+  "name": "WattScape — Intelligent 3D Resource Twin",
+  "description": "Multi-tenant 3D operational resource intelligence platform uniting spatial twins, data trust, explainable AI, scenario simulation, and verified impact proof.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

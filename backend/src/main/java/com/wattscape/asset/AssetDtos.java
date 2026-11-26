@@ -1,0 +1,7 @@
+package com.wattscape.asset;
+import jakarta.validation.constraints.*; import java.math.BigDecimal; import java.time.Instant; import java.time.LocalDate; import java.util.UUID;
+public final class AssetDtos {
+ private AssetDtos(){}
+ public record CreateAssetRequest(@NotNull UUID floorId,UUID roomId,@Size(max=120) String systemName,@NotBlank @Pattern(regexp="Chiller|AHU|Boiler|Switchgear|Pump|SolarInverter|Submeter|CoolingTower|PVArray") String assetClass,@NotBlank @Size(max=160) String name,@NotBlank @Size(max=120) String sourceId,@Size(max=120) String manufacturer,@Size(max=120) String model,@Size(max=120) String serial,LocalDate commissionDate,@Pattern(regexp="critical|high|medium|low") String criticality,@DecimalMin("0") @DecimalMax("1000000") BigDecimal powerKw,@DecimalMin("0") @DecimalMax("1000000") BigDecimal waterFlowLpm){}
+ public record AssetResponse(UUID id,UUID floorId,UUID roomId,String systemName,String assetClass,String name,String manufacturer,String model,String serial,LocalDate commissionDate,String status,String criticality,String sourceId,BigDecimal powerKw,BigDecimal waterFlowLpm,Instant createdAt,Instant updatedAt){public static AssetResponse from(Asset a){return new AssetResponse(a.getId(),a.getFloorId(),a.getRoomId(),a.getSystemName(),a.getAssetClass(),a.getName(),a.getManufacturer(),a.getModel(),a.getSerial(),a.getCommissionDate(),a.getStatus(),a.getCriticality(),a.getSourceId(),a.getPowerKw(),a.getWaterFlowLpm(),a.getCreatedAt(),a.getUpdatedAt());}}
+}

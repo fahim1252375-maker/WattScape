@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Your WattScape invitation</title>
+</head>
+<body style="margin:0;padding:0;background:#f2f6f7;color:#162a32;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">Join ${organization} as ${role} in WattScape.</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f2f6f7;width:100%;">
+    <tr><td align="center" style="padding:32px 14px;">
+      <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid #dce6e9;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:24px 30px;background:#102a34;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+            <td valign="middle" style="padding-right:12px;"><img src="cid:wattscape-mark" width="38" height="38" alt="" style="display:block;width:38px;height:38px;border:0;"></td>
+            <td valign="middle" style="color:#ffffff;font-size:20px;font-weight:700;letter-spacing:.2px;">WattScape</td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="padding:34px 30px 12px;">
+          <p style="margin:0 0 10px;color:#087f82;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;">Organization invitation</p>
+          <h1 style="margin:0 0 18px;color:#162a32;font-size:26px;line-height:1.25;font-weight:700;">You’re invited to WattScape</h1>
+          <p style="margin:0;color:#405860;font-size:16px;line-height:1.65;">You have been invited to join <strong style="color:#162a32;">${organization}</strong> as <strong style="color:#162a32;">${role}</strong>.</p>
+        </td></tr>
+        <tr><td align="center" style="padding:22px 30px 12px;">
+          <a href="${appUrl}" style="display:inline-block;padding:14px 24px;border-radius:8px;background:#087f82;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;line-height:20px;">Open WattScape</a>
+        </td></tr>
+        <tr><td style="padding:12px 30px 6px;">
+          <p style="margin:0;color:#405860;font-size:14px;line-height:1.65;">Sign in with the email address that received this message. In <strong>Account &amp; access</strong>, choose <strong>Join organization</strong> and enter the invitation code below.</p>
+        </td></tr>
+        <tr><td style="padding:16px 30px 8px;">
+          <div style="padding:16px 18px;border:1px solid #c8e4e1;border-radius:10px;background:#f0faf8;">
+            <p style="margin:0 0 8px;color:#49636a;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Fallback invitation code</p>
+            <p style="margin:0;color:#123b42;font-family:Menlo,Consolas,monospace;font-size:16px;line-height:1.55;letter-spacing:.35px;overflow-wrap:anywhere;word-break:break-all;">${token}</p>
+          </div>
+        </td></tr>
+        <tr><td style="padding:12px 30px 30px;">
+          <p style="margin:0;color:#405860;font-size:13px;line-height:1.65;">This code can be used once, only by the verified email address it was sent to. It expires <strong>${expiresAt}</strong>.</p>
+          <p style="margin:16px 0 0;color:#667a80;font-size:12px;line-height:1.6;">If you weren’t expecting this invitation, you can ignore this email. The Open WattScape button does not contain your invitation code.</p>
+        </td></tr>
+        <tr><td style="padding:18px 30px;border-top:1px solid #e5edef;background:#f8fbfb;color:#71848a;font-size:11px;line-height:1.5;">WattScape · Intelligent Resource Operations</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

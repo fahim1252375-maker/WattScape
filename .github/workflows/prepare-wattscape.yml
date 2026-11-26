@@ -39,6 +39,7 @@ jobs:
           trap 'rm -rf "$TMP_DIR"' EXIT
 
           python3 - "$ARCHIVE" "$TMP_DIR/extracted" <<'PY'
+          import base64
           import os
           import shutil
           import stat
@@ -103,12 +104,24 @@ jobs:
           entries = [p for p in extracted.iterdir() if p.name not in {"__MACOSX", ".DS_Store"}]
           source_root = entries[0] if len(entries) == 1 and entries[0].is_dir() else extracted
 
+          # Keep project workflow files out of the Actions-token commit; restore them via
+          # the connected GitHub API after source extraction.
+          workflow_dir = source_root / ".github" / "workflows"
+          if workflow_dir.is_dir():
+              for workflow_file in sorted(workflow_dir.glob("*")):
+                  if workflow_file.is_file():
+                      relative = workflow_file.relative_to(source_root).as_posix()
+                      print("WATTS_CAPSULE_WORKFLOW_BEGIN:" + relative)
+                      print(base64.b64encode(workflow_file.read_bytes()).decode("ascii"))
+                      print("WATTS_CAPSULE_WORKFLOW_END")
+
           repo_root = Path.cwd()
           copied = 0
           for item in source_root.iterdir():
               destination = repo_root / item.name
               if item.is_dir():
-                  shutil.copytree(item, destination, dirs_exist_ok=True)
+                  ignore = shutil.ignore_patterns("workflows") if item.name == ".github" else None
+                  shutil.copytree(item, destination, dirs_exist_ok=True, ignore=ignore)
               else:
                   shutil.copy2(item, destination)
               copied += 1
@@ -239,7 +252,6 @@ jobs:
 
           rm -f "$ARCHIVE"
           rm -f ".repo-bootstrap-trigger"
-          rm -f ".github/workflows/prepare-wattscape.yml"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
